@@ -12,6 +12,9 @@ contract SimpleVault {
     }
 
     mapping(address => User) public users;
+    
+      event deposited(address indexed user, uint amount);
+    event withdrawn(address indexed user, uint amount);
 
     // Deposit Ether into contract
 
@@ -22,6 +25,8 @@ contract SimpleVault {
        // users[msg.sender].totalDeposited += msg.value;
         users[msg.sender].totalDeposited++;
         users[msg.sender].timestamp = block.timestamp;
+
+        emit deposited(msg.sender, msg.value);
     }
 
     // Withdraw Ether using low-level call
@@ -34,6 +39,8 @@ contract SimpleVault {
 
         (bool success,) = msg.sender.call{value: _amount}("");
         require(success, "Transfer Failed");
+
+         emit withdrawn(msg.sender, _amount);
     }
 
       // Check user balance
